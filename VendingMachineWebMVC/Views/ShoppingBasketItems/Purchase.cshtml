@@ -1,0 +1,26 @@
+﻿
+@model DataAccess.Models.Products
+
+@{
+    ViewData["Title"] = "Purchase";
+}
+
+<div class="wrapper">
+    <div class="checkout container">
+        <form id="payment-form" method="post" asp-controller="ShoppingBasketItems" asp-action="Create">
+            @Html.HiddenFor(n => n.Id)
+            <script src="https://checkout.stripe.com/checkout.js"
+                    class="stripe-button"
+                    data-key="pk_test_51GzLoBIWDu53HltTom3G4rsJKkx2vyJjJYAWGFjfXIELIVAG7Uop63eSbjX0UqN2ijXe73o95cg7jyfAzyHwxpgz00LMHEkm1K"
+                    data-name="ShoppingCartPayment"
+                    data-locale="en"
+                    data-label="Confirm Payment- $@ViewBag.total">
+
+            </script>
+
+
+            @*<button class="btn btn-success" type="submit"><span>Confirm payment - $@Model.Price</span></button>*@
+        </form>
+    </div>
+</div>
+

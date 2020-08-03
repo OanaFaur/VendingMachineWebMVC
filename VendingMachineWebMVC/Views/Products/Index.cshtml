@@ -1,0 +1,34 @@
+﻿@model IEnumerable<DataAccess.Models.Products>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+<h1>Our Products</h1>
+<div class="row">
+    @foreach (var item in ViewBag.products)
+    {
+        @if (item.ItemsLeft > 0)
+        {
+            <div class="col-4">
+                <div class="card">
+                    <img class="card-img-top" src="@Url.Content(item.Image)" height="220" width="100" />
+                    <div class="card-body">
+                        <h4 class="card-title">@item.Name</h4>
+                        <p class="card-text">@(item.Price) Lei</p>
+
+                    </div>
+                    <div class="addToCart text-right">
+                        <p class="button ">
+
+                            <a class="btn btn-success" id="cartButton" asp-controller="ShoppingBasketItems" asp-action="BuyProduct" asp-route-id="@item.Id">Buy Now </a>
+
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+

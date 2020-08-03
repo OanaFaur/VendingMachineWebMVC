@@ -1,0 +1,49 @@
+﻿<div class="row checkoutForm">
+    <h2>Your shopping cart</h2>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Selected amount</th>
+                <th>Drink</th>
+                <th class="text-right">Price</th>
+                <th class="text-right">Subtotal</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var line in ViewBag.basket)
+            {
+                <tr>
+                    <td class="text-center">@line.Quantity</td>
+                    <td class="text-left">@line.Product.Name</td>
+                    <td class="text-right">@line.Product.Price</td>
+                    <td class="text-right">
+                        @(line.Quantity * line.Product.Price)
+                    </td>
+                    <td class="text-center"><a class="glyphicon glyphicon-remove text-danger remove" asp-controller="ShoppingCart" asp-action="RemoveFromShoppingCart" asp-route-productId="@line.Product.Id"></a></td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="text-right">Total:</td>
+                <td class="text-right">
+                    @ViewBag.total
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="text-right">
+        <div class="btn-group ">
+            <a class="btn btn-success" asp-controller="ShoppingBasketItems" asp-action="Purchase">Check out</a>
+            <div class="btn-group">
+                <a class="btn btn-success"  asp-controller="Products" asp-action="Index">
+                    Add more products
+                </a>
+
+            </div>
+        </div>
+    </div>
+</div>
