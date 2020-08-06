@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BusinessLogic.Interfaces
+namespace BusinessLayer.Interfaces
 {
     public interface IProductService
     {

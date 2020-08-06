@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using BusinessLogic.Interfaces;
-using BusinessLogic.Services;
+using BusinessLayer.Interfaces;
+using BusinessLayer.Services;
 using Stripe;
 using DataAccess.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;

@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace VendingMachineWebMVC.ViewModel
+namespace DataAccess.ViewModels
 {
     public class UserLoginViewModel
     {
-
         public string Username { get; set; }
-        public string Password{ get; set; }
-
+        public string Password { get; set; }
     }
 }

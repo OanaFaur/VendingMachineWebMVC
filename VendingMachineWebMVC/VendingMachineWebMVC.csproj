@@ -25,6 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\VendingMachine\BusinessLogic\BusinessLogic.csproj" />
     <ProjectReference Include="..\..\VendingMachine\DataAccess\DataAccess.csproj" />
+    <ProjectReference Include="..\BusinessLayer\BusinessLayer.csproj" />
   </ItemGroup>
 
 </Project>

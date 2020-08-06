@@ -1,4 +1,4 @@
-﻿using BusinessLogic.Interfaces;
+﻿using BusinessLayer.Interfaces;
 using DataAccess.Models;
 using DataAccess.Repositories;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace BusinessLogic.Services
+namespace BusinessLayer.Services
 {
     public class ProductService : IProductService
     {
@@ -15,8 +15,9 @@ namespace BusinessLogic.Services
         public Products find(int id)
         {
             return repo.Products.Where(p => p.Id == id).FirstOrDefault();
+
         }
-        
+
         public List<Products> GetProductList()
         {
             return repo.Products.ToList();

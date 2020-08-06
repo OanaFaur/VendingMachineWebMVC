@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using BusinessLogic.Interfaces;
-using BusinessLogic.Services;
+using BusinessLayer.Interfaces;
+using BusinessLayer.Services;
 using DataAccess.Models;
+using DataAccess.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 using VendingMachineWebMVC.DataContext;
 using VendingMachineWebMVC.Models;
 
@@ -17,10 +21,14 @@ namespace VendingMachineWebMVC.Controllers
 {
     public class ProductsController : Controller
     {
-        
-        public IProductService productService = new ProductService();
-        
+        public IProductService productService = new BusinessLayer.Services.ProductService();
+        public IHostingEnvironment HostingEnvironment;
 
+    public ProductsController(IHostingEnvironment hostingEnvironment)
+        {
+            HostingEnvironment = hostingEnvironment;
+        }
+   
     // GET: Products
     public ActionResult Index()
     {
@@ -31,20 +39,42 @@ namespace VendingMachineWebMVC.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult AddProduct()
         {
-         
-
             return View();
         }
         
         [HttpPost]
-        public IActionResult AddProduct(Products db)
-    {
-        productService.AddProduct(db);
+        public IActionResult AddProduct(AddProductViewModel db)
+        {
+            string stringFileName = UploadFile(db);
+            var product = new Products()
+            {
+                Name = db.Name,
+                Price=db.Price,
+                ItemsLeft=db.ItemsLeft,
+                ItemsSold=db.ItemsSold,
+                Image=stringFileName
+            };
+
+        productService.AddProduct(product);
 
         return View();
-    }
+        }
 
-
+        private string UploadFile(AddProductViewModel db)
+        {
+            string fileName = null;
+            if (db.Image != null)
+            {
+                string uploadDir = Path.Combine(HostingEnvironment.WebRootPath, "Images");
+                fileName = Guid.NewGuid().ToString() + "-" + db.Image.FileName;
+                string filePath = Path.Combine(uploadDir, fileName);
+                using(var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    db.Image.CopyTo(fileStream);
+                }
+            }
+            return fileName;
+        }
     }
 
 }

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using BusinessLogic.Interfaces;
-using BusinessLogic.Services;
+using BusinessLayer.Interfaces;
+using BusinessLayer.Services;
 using DataAccess.Repositories;
 using DataAccess.ViewModels;
 using Microsoft.AspNetCore.Authentication;
@@ -16,8 +16,6 @@ using Microsoft.EntityFrameworkCore;
 using Scrypt;
 using VendingMachineWebMVC.DataContext;
 using VendingMachineWebMVC.Models;
-
-using VendingMachineWebMVC.ViewModel;
 
 namespace VendingMachineWebMVC.Controllers
 {
@@ -61,49 +59,23 @@ namespace VendingMachineWebMVC.Controllers
 
             return View();
         }
-
-
+        
         public IActionResult Login()
         {
             return View();
         }
-
-
+        
         [HttpPost]
         public IActionResult Login(DataAccess.ViewModels.UserLoginViewModel user)
         {
             ScryptEncoder encoder = new ScryptEncoder();
             bool isAuthenticated = false;
             var founduser = repo.FindUser(user.Username);
-
-            // var password = founduser.Password;
-
-            //if (founduser != null)
-            //{
-
-            //    if (userService.Login(user))
-            //    {
-            //        return View("LoginSuccesful");
-            //    }
-            //    return View();
-            // }
-
+            
             if (founduser == null)
             {
                 ModelState.AddModelError("", "Ths user does not exist");
             }
-            //else if( founduser!=null)
-            // {
-
-            //     if (userService.Login(user))
-            //     {
-            //         return View("LoginSuccesful");
-            //     }
-            //     else
-            //     {
-            //         ModelState.AddModelError("", "Check the password");
-
-
             else
             {
 
@@ -129,32 +101,9 @@ namespace VendingMachineWebMVC.Controllers
                     {
                         ModelState.AddModelError("", "Check the password");
                     }
-
                 }
             }
             return View();
-        }
-
-        private bool VerifyPassword(string password, byte[] passwordHash, byte[] passwordSalt)
-        {
-            using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
-            {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password)); // Create hash using password salt.
-                for (int i = 0; i < computedHash.Length; i++)
-                { // Loop through the byte array
-                    if (computedHash[i] != passwordHash[i]) return false; // if mismatch
-                }
-            }
-            return true; //if no mismatches.
-        }
-
-        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        {
-            using (var hmac = new System.Security.Cryptography.HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            }
         }
     }
 }

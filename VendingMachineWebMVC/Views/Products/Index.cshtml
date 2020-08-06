@@ -13,7 +13,7 @@
         {
             <div class="col-4">
                 <div class="card">
-                    <img class="card-img-top" src="@Url.Content(item.Image)" height="220" width="100" />
+                    <img class="card-img-top" src="~/Images/@item.Image" height="220" width="100" asp-append-version="true" />
                     <div class="card-body">
                         <h4 class="card-title">@item.Name</h4>
                         <p class="card-text">@(item.Price) Lei</p>
