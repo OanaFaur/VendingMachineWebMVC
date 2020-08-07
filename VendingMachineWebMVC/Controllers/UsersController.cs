@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Scrypt;
-using VendingMachineWebMVC.DataContext;
 using VendingMachineWebMVC.Models;
 
 namespace VendingMachineWebMVC.Controllers
@@ -24,6 +23,7 @@ namespace VendingMachineWebMVC.Controllers
         private IUserService userService = new UserService();
         private IUserRepository repo = new UserRepository();
         ClaimsIdentity identity = null;
+        
         private const string secretCode = "ghujllrt";
 
 
@@ -104,6 +104,14 @@ namespace VendingMachineWebMVC.Controllers
                 }
             }
             return View();
+        }
+        
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+
+            return RedirectToAction("Index","Home");
+
         }
     }
 }

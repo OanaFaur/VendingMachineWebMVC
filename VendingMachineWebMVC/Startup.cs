@@ -42,7 +42,16 @@ namespace VendingMachineWebMVC
             
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSession();
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+            services
+        .AddAuthentication(options =>
+        {
+            options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        })
+        .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+        {
+            options.LoginPath = "/Users/Login";
+            options.LogoutPath = "/Users/Logout";
+        });
             string AssemblyName = typeof(DataAccess.DataContext).Namespace;
             string dbConnectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<DataAccess.DataContext>(options => options.UseSqlServer(dbConnectionString, optionsBuilder => optionsBuilder.MigrationsAssembly("VendingMachineWebMVC")));

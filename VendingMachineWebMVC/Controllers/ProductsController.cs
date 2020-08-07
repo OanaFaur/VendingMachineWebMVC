@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
-using VendingMachineWebMVC.DataContext;
 using VendingMachineWebMVC.Models;
 
 
