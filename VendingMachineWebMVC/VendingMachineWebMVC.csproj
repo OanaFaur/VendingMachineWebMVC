@@ -7,6 +7,7 @@
 
 
   <ItemGroup>
+    <PackageReference Include="FontAwesome" Version="4.7.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.0" />
@@ -23,7 +24,6 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\..\VendingMachine\BusinessLogic\BusinessLogic.csproj" />
     <ProjectReference Include="..\..\VendingMachine\DataAccess\DataAccess.csproj" />
     <ProjectReference Include="..\BusinessLayer\BusinessLayer.csproj" />
   </ItemGroup>

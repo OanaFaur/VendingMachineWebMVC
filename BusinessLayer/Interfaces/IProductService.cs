@@ -10,5 +10,6 @@ namespace BusinessLayer.Interfaces
         List<Products> GetProductList();
         Products find(int id);
         void AddProduct(Products db);
+       
     }
 }

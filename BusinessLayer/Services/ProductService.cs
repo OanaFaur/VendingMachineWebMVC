@@ -10,7 +10,7 @@ namespace BusinessLayer.Services
 {
     public class ProductService : IProductService
     {
-        public IProductsRepository repo = new ProductRepository();
+        private IProductsRepository repo = new ProductRepository();
 
         public Products find(int id)
         {
@@ -27,5 +27,6 @@ namespace BusinessLayer.Services
         {
             repo.AddProduct(db);
         }
+        
     }
 }

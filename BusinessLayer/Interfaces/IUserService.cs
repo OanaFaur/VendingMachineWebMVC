@@ -8,7 +8,6 @@ namespace BusinessLayer.Interfaces
 {
     public interface IUserService
     {
-        List<AdminUser> GetUserList();
         void Register(UserRegisterViewModel user);
     }
 }

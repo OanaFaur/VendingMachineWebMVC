@@ -28,10 +28,6 @@ namespace BusinessLayer.Services
 
             repo.AddUser(newUser);
         }
-
-        public List<AdminUser> GetUserList()
-        {
-            return repo.Users.ToList();
-        }
+        
     }
 }

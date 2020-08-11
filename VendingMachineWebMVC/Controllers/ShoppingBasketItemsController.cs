@@ -9,17 +9,18 @@ using DataAccess;
 using DataAccess.Models;
 using VendingMachineWebMVC.Helpers;
 using DataAccess.Repositories;
-using BusinessLogic.Interfaces;
+
 using Stripe;
+using BusinessLayer.Interfaces;
 
 namespace VendingMachineWebMVC.Controllers
 {
     public class ShoppingBasketItemsController : Controller
     {
        
-        public ProductRepository repo = new ProductRepository();
+        public IProductsRepository repo = new ProductRepository();
 
-        IProductService productservice = new BusinessLogic.Services.ProductService();
+        IProductService productservice = new BusinessLayer.Services.ProductService();
 
         public IActionResult Index()
         {
@@ -66,6 +67,15 @@ namespace VendingMachineWebMVC.Controllers
             return RedirectToAction("Index");
         }
 
+        public IActionResult Remove(int id)
+        {
+            List<ShoppingBasketItem> cart = SessionHelper.GetObjectFromJson<List<ShoppingBasketItem>>(HttpContext.Session, "basket");
+            int index = isExist(id);
+            cart.RemoveAt(index);
+            SessionHelper.SetObjectAsJson(HttpContext.Session, "basket", cart);
+            return RedirectToAction("Index");
+        }
+
         private int isExist(int id)
         {
             List<ShoppingBasketItem> basket = SessionHelper.GetObjectFromJson<List<ShoppingBasketItem>>(HttpContext.Session, "basket");
@@ -92,7 +102,7 @@ namespace VendingMachineWebMVC.Controllers
         private int GetQuantity()
         {
             List<ShoppingBasketItem> basket = SessionHelper.GetObjectFromJson<List<ShoppingBasketItem>>(HttpContext.Session, "basket");
-
+           
             int quantity = basket.Sum(item => item.Quantity);
 
             return quantity;
@@ -109,7 +119,7 @@ namespace VendingMachineWebMVC.Controllers
         public IActionResult Create(string stripeToken, int Id)
         {
             List<ShoppingBasketItem> basket = SessionHelper.GetObjectFromJson<List<ShoppingBasketItem>>(HttpContext.Session, "basket");
-            List<Products> products = productservice.GetProductList();
+            
             double d = GetTotal();
 
             var chargeOptions = new ChargeCreateOptions()

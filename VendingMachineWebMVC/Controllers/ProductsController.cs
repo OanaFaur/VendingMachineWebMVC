@@ -5,7 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using BusinessLayer.Interfaces;
 using BusinessLayer.Services;
+using DataAccess;
 using DataAccess.Models;
+using DataAccess.Repositories;
 using DataAccess.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -20,27 +22,31 @@ namespace VendingMachineWebMVC.Controllers
 {
     public class ProductsController : Controller
     {
-        public IProductService productService = new BusinessLayer.Services.ProductService();
-        public IHostingEnvironment HostingEnvironment;
+        private IProductsRepository repo = new ProductRepository();
+        private IProductService productService = new BusinessLayer.Services.ProductService();
+        private IHostingEnvironment HostingEnvironment;
 
-    public ProductsController(IHostingEnvironment hostingEnvironment)
+        DataContext context = new DataContext();
+
+        public ProductsController(IHostingEnvironment hostingEnvironment)
         {
             HostingEnvironment = hostingEnvironment;
         }
    
     // GET: Products
-    public ActionResult Index()
-    {
+        public ActionResult Index()
+        {
         ViewBag.products = productService.GetProductList();
 
         return View();
-    }
-        [Authorize(Roles = "Admin")]
-        public IActionResult AddProduct()
-        {
-            return View();
         }
-        
+
+        [Authorize(Roles = "Admin")]
+         public IActionResult AddProduct()
+         {
+            return View();
+         }
+
         [HttpPost]
         public IActionResult AddProduct(AddProductViewModel db)
         {
@@ -48,17 +54,23 @@ namespace VendingMachineWebMVC.Controllers
             var product = new Products()
             {
                 Name = db.Name,
-                Price=db.Price,
-                ItemsLeft=db.ItemsLeft,
-                ItemsSold=db.ItemsSold,
-                Image=stringFileName
+                Price = db.Price,
+                ItemsLeft = db.ItemsLeft,
+                ItemsSold = db.ItemsSold,
+                Image = stringFileName
             };
 
-        productService.AddProduct(product);
+            repo.AddProduct(product);
 
-        return View();
+            return View();
         }
-
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int? id)
+       {
+           await  repo.Delete(id);
+            return RedirectToAction(nameof(Index));
+       }
+        
         private string UploadFile(AddProductViewModel db)
         {
             string fileName = null;

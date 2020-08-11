@@ -4,8 +4,19 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
 <h1>Our Products</h1>
+<p>
+
+</p>
+<div>
+    @if (User.IsInRole("Admin"))
+     {
+        <a class="btn btn-outline-success" asp-controller="Products" asp-action="AddProduct">Add a new product</a>
+     }
+</div>
+<p>
+
+</p>
 <div class="row">
     @foreach (var item in ViewBag.products)
     {
@@ -22,7 +33,15 @@
                     <div class="addToCart text-right">
                         <p class="button ">
 
-                            <a class="btn btn-success" id="cartButton" asp-controller="ShoppingBasketItems" asp-action="BuyProduct" asp-route-id="@item.Id">Buy Now </a>
+                            <a class="btn btn-success" id="cartButton" asp-controller="ShoppingBasketItems" asp-action="BuyProduct" asp-route-Id="@item.Id">Buy Now </a>
+
+                        </p>
+                        <p>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a class="btn btn-danger" id="cartButton" asp-controller="Products" asp-action="Delete" asp-route-Id="@item.Id" onclick="return confirm('Are you sure you want to delete this item?')">Delete Now </a>
+                            }
+
 
                         </p>
                     </div>
@@ -30,5 +49,8 @@
             </div>
         }
     }
+   
 </div>
+
+
 
