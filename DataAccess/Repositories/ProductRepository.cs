@@ -8,42 +8,33 @@ namespace DataAccess.Repositories
 {
     public class ProductRepository : IProductsRepository
     {
-        private readonly DataContext _dataContext;
-        public ProductRepository()
-        {
-
-        }
-        
-        public ProductRepository(DataContext dataContext)
-        {
-            _dataContext = dataContext;
-        }
+        private DataContext context = new DataContext();
 
         public IEnumerable<Products> Products
         {
             get
             {
-                using (var data = new DataContext())
-                {
-                    return data.Products.ToList();
-                }
+                return context.Products.ToList();
             }
         }
 
         public void AddProduct(Products db)
         {
-            using (var data = new DataContext())
-            {
-                data.Add(db);
-                data.SaveChanges();
-            }
+            context.Add(db);
+            context.SaveChanges();
         }
-        
+
         public Products find(int id)
         {
             return Products.Where(p => p.Id == id).FirstOrDefault();
         }
 
-        
+        public async Task Delete(int? id)
+        {
+            var product = await context.Products.FindAsync(id);
+            context.Products.Remove(product);
+            await context.SaveChangesAsync();
+        }
+
     }
 }

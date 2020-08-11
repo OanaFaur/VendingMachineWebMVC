@@ -8,10 +8,8 @@ namespace DataAccess.Repositories
     public interface IProductsRepository
     {
         IEnumerable<Products> Products { get; }
-        //IEnumerable<Products> Product(string item);
-        
         void AddProduct(Products db);
-        //void DeleteProduct(Products db);
-        //void UpdateProducts(Products db);
+        Task Delete(int? id);
+        Products find(int id);
     }
 }

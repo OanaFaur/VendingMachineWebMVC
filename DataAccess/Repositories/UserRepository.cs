@@ -8,48 +8,31 @@ namespace DataAccess.Repositories
 {
     public class UserRepository : IUserRepository
     {
+        private DataContext context = new DataContext();
+
         public IEnumerable<AdminUser> Users
         {
             get
             {
-                using(var data = new DataContext()) {
-                    return data.AdminUser.ToList();
-                }
+                return context.AdminUser.ToList();
             }
         }
-        
+
         public AdminUser GetById(int id)
         {
-            using(var data = new DataContext())
-            {
-                return data.AdminUser.Find(id);
-            }
+            return context.AdminUser.Find(id);
+
         }
         public void AddUser(AdminUser user)
         {
-
-            using (var data = new DataContext())
-            {
-                data.Add(user);
-                data.SaveChanges();
-            }
+            context.Add(user);
+            context.SaveChanges();
         }
 
-        public void UpdateUser(AdminUser user)
-        {
-            using (DataContext data = new DataContext())
-            {
-                data.Update(user);
-                data.SaveChanges();
-            }
-        }
 
         public AdminUser FindUser(string username)
         {
-           using(var data = new DataContext())
-            {
-                return data.AdminUser.FirstOrDefault(x => x.Username == username);
-            }
+            return context.AdminUser.FirstOrDefault(x => x.Username == username);
         }
     }
 }

@@ -66,10 +66,10 @@ namespace VendingMachineWebMVC.Controllers
         }
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
-       {
+        {
            await  repo.Delete(id);
             return RedirectToAction(nameof(Index));
-       }
+        }
         
         private string UploadFile(AddProductViewModel db)
         {

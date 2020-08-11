@@ -40,11 +40,7 @@ namespace DataAccess
                 b.Property<string>("SecondName");
 
                 b.Property<string>("Password");
-
-                b.Property<byte[]>("PasswordHash");
-
-                b.Property<byte[]>("PasswordSalt");
-
+                
                 b.Property<string>("Username");
 
                 b.HasKey("Id");
