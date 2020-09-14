@@ -9,6 +9,7 @@ namespace VendingMachineWebMVC.Helpers
 {
     public static class SessionHelper
     {
+       
 
         public static void SetObjectAsJson(this ISession session, string key, object value)
         {

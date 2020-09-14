@@ -9,7 +9,6 @@ using DataAccess;
 using DataAccess.Models;
 using VendingMachineWebMVC.Helpers;
 using DataAccess.Repositories;
-
 using Stripe;
 using BusinessLayer.Interfaces;
 
@@ -18,9 +17,9 @@ namespace VendingMachineWebMVC.Controllers
     public class ShoppingBasketItemsController : Controller
     {
        
-        public IProductsRepository repo = new ProductRepository();
+        private IProductsRepository repo = new ProductRepository();
 
-        IProductService productservice = new BusinessLayer.Services.ProductService();
+        private IProductService productservice = new BusinessLayer.Services.ProductService();
 
         public IActionResult Index()
         {
@@ -31,9 +30,10 @@ namespace VendingMachineWebMVC.Controllers
 
             return View();
         }
-
+        
         public IActionResult BuyProduct(int id)
         {
+            var product = repo.find(id);
 
             if (SessionHelper.GetObjectFromJson<List<ShoppingBasketItem>>(HttpContext.Session, "basket") == null)
             {
@@ -46,6 +46,10 @@ namespace VendingMachineWebMVC.Controllers
                         Quantity = 1
                     }
                 };
+                
+                product.ItemsLeft--;
+                product.ItemsSold++;
+                
                 SessionHelper.SetObjectAsJson(HttpContext.Session, "basket", basket);
             }
 
@@ -55,24 +59,46 @@ namespace VendingMachineWebMVC.Controllers
                 int index = isExist(id);
                 if (index != -1)
                 {
+                    List<Products> products = productservice.GetProductList();
                     basket[index].Quantity++;
-
                 }
                 else
                 {
                     basket.Add(new ShoppingBasketItem { Product = repo.find(id), Quantity = 1 });
                 }
+                
+                product.ItemsLeft--;
+                product.ItemsSold++;
                 SessionHelper.SetObjectAsJson(HttpContext.Session, "basket", basket);
+
+               
             }
+            repo.Update(product);
             return RedirectToAction("Index");
         }
+     
 
         public IActionResult Remove(int id)
         {
-            List<ShoppingBasketItem> cart = SessionHelper.GetObjectFromJson<List<ShoppingBasketItem>>(HttpContext.Session, "basket");
+            List<ShoppingBasketItem> basket = SessionHelper.GetObjectFromJson<List<ShoppingBasketItem>>(HttpContext.Session, "basket");
             int index = isExist(id);
-            cart.RemoveAt(index);
-            SessionHelper.SetObjectAsJson(HttpContext.Session, "basket", cart);
+            var product = repo.find(id);
+            if (basket[index].Quantity > 1)
+            {
+                basket[index].Quantity--;
+                product.ItemsLeft++;
+                product.ItemsSold--;
+            }
+            else if (basket[index].Quantity == 1)
+            {
+                basket.RemoveAt(index);
+                product.ItemsLeft++;
+                product.ItemsSold--;
+
+            }
+
+            repo.Update(product);
+            SessionHelper.SetObjectAsJson(HttpContext.Session, "basket", basket);
             return RedirectToAction("Index");
         }
 
@@ -88,6 +114,8 @@ namespace VendingMachineWebMVC.Controllers
             }
             return -1;
         }
+        
+
 
         private double GetTotal()
         {
@@ -104,6 +132,7 @@ namespace VendingMachineWebMVC.Controllers
             List<ShoppingBasketItem> basket = SessionHelper.GetObjectFromJson<List<ShoppingBasketItem>>(HttpContext.Session, "basket");
            
             int quantity = basket.Sum(item => item.Quantity);
+            
 
             return quantity;
         }

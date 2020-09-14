@@ -36,9 +36,10 @@ namespace VendingMachineWebMVC.Controllers
     // GET: Products
         public ActionResult Index()
         {
-        ViewBag.products = productService.GetProductList();
 
-        return View();
+           ViewBag.products = productService.GetProductList();
+
+           return View();
         }
 
         [Authorize(Roles = "Admin")]

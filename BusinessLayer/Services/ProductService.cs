@@ -11,13 +11,7 @@ namespace BusinessLayer.Services
     public class ProductService : IProductService
     {
         private IProductsRepository repo = new ProductRepository();
-
-        public Products find(int id)
-        {
-            return repo.Products.Where(p => p.Id == id).FirstOrDefault();
-
-        }
-
+        
         public List<Products> GetProductList()
         {
             return repo.Products.ToList();

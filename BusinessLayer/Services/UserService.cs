@@ -25,7 +25,6 @@ namespace BusinessLayer.Services
                 FirstName = user.FirstName,
                 SecondName = user.SecondName
             };
-
             repo.AddUser(newUser);
         }
         

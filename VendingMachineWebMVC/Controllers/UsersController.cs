@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Scrypt;
 using VendingMachineWebMVC.Models;
 
+
 namespace VendingMachineWebMVC.Controllers
 {
     public class UsersController : Controller
