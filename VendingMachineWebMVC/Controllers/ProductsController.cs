@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using BusinessLayer.AdapterProduct;
 using BusinessLayer.Interfaces;
 using BusinessLayer.Services;
 using DataAccess;
@@ -22,8 +23,8 @@ namespace VendingMachineWebMVC.Controllers
 {
     public class ProductsController : Controller
     {
-        private IProductsRepository repo = new ProductRepository();
-        private IProductService productService = new BusinessLayer.Services.ProductService();
+       // private IProductsRepository repo = new ProductRepository();
+       // private IProductService productService = new BusinessLayer.Services.ProductService();
         private IHostingEnvironment HostingEnvironment;
 
         DataContext context = new DataContext();
@@ -36,8 +37,10 @@ namespace VendingMachineWebMVC.Controllers
     // GET: Products
         public ActionResult Index()
         {
+            ProductRepository repo = new ProductRepository();
+            IProductsRepository target = new ProductAdapter(repo);
 
-           ViewBag.products = productService.GetProductList();
+            ViewBag.products = target.Products;
 
            return View();
         }
@@ -51,6 +54,9 @@ namespace VendingMachineWebMVC.Controllers
         [HttpPost]
         public IActionResult AddProduct(AddProductViewModel db)
         {
+            ProductRepository repo = new ProductRepository();
+            IProductsRepository target = new ProductAdapter(repo);
+
             string stringFileName = UploadFile(db);
             var product = new Products()
             {
@@ -61,14 +67,16 @@ namespace VendingMachineWebMVC.Controllers
                 Image = stringFileName
             };
 
-            repo.AddProduct(product);
+            target.AddProduct(product);
 
             return View();
         }
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
-           await  repo.Delete(id);
+            ProductRepository repo = new ProductRepository();
+            IProductsRepository target = new ProductAdapter(repo);
+            await  target.Delete(id);
             return RedirectToAction(nameof(Index));
         }
         

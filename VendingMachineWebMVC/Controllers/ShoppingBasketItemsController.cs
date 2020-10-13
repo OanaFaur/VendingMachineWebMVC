@@ -11,15 +11,16 @@ using VendingMachineWebMVC.Helpers;
 using DataAccess.Repositories;
 using Stripe;
 using BusinessLayer.Interfaces;
+using BusinessLayer.AdapterProduct;
 
 namespace VendingMachineWebMVC.Controllers
 {
     public class ShoppingBasketItemsController : Controller
     {
        
-        private IProductsRepository repo = new ProductRepository();
+       // private IProductsRepository repo = new ProductRepository();
 
-        private IProductService productservice = new BusinessLayer.Services.ProductService();
+        //private IProductService productservice = new BusinessLayer.Services.ProductService();
 
         public IActionResult Index()
         {
@@ -33,7 +34,10 @@ namespace VendingMachineWebMVC.Controllers
         
         public IActionResult BuyProduct(int id)
         {
-            var product = repo.find(id);
+            ProductRepository repo = new ProductRepository();
+            IProductsRepository target = new ProductAdapter(repo);
+
+            var product = target.find(id);
 
             if (SessionHelper.GetObjectFromJson<List<ShoppingBasketItem>>(HttpContext.Session, "basket") == null)
             {
@@ -59,7 +63,7 @@ namespace VendingMachineWebMVC.Controllers
                 int index = isExist(id);
                 if (index != -1)
                 {
-                    List<Products> products = productservice.GetProductList();
+                    List<Products> products = target.Products.ToList();
                     basket[index].Quantity++;
                 }
                 else
@@ -80,9 +84,11 @@ namespace VendingMachineWebMVC.Controllers
 
         public IActionResult Remove(int id)
         {
+            ProductRepository repo = new ProductRepository();
+            IProductsRepository target = new ProductAdapter(repo);
             List<ShoppingBasketItem> basket = SessionHelper.GetObjectFromJson<List<ShoppingBasketItem>>(HttpContext.Session, "basket");
             int index = isExist(id);
-            var product = repo.find(id);
+            var product = target.find(id);
             if (basket[index].Quantity > 1)
             {
                 basket[index].Quantity--;
